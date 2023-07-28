@@ -13,7 +13,7 @@ setwd("~/HepOrgMalaria/humanreads/InitialAnalysis/")
 
 ##Load in rawdata and metadata 
 rawdata <- read.csv("HepOrgMalaria_humanreads_rawdata.csv",sep=",")
-names <- make.unique(rawdata[,1])
+names   <- make.unique(rawdata[,1])
 rownames(rawdata) <- names
 rawdata <- rawdata[,-1]
 
@@ -33,7 +33,7 @@ initial <- subset(x = initial, subset = nCount_RNA > 2000 & nCount_RNA < Inf)
 
 
 ##SCTransform, dimensional reduction and clustering
-initial <- SCTransform(initial, vars.to.regress = c("nCount_RNA","nFeature_RNA","plate"), do.scale = T, verbose = T)
+initial  <- SCTransform(initial, vars.to.regress = c("nCount_RNA","nFeature_RNA","plate"), do.scale = T, verbose = T)
 initial  <- RunPCA(object = initial , verbose = T)
 initial  <- RunTSNE(object = initial , verbose = T)
 initial  <- RunUMAP(object = initial , dims = 1:10, verbose = T)
@@ -43,7 +43,7 @@ initial  <- FindNeighbors(object = initial , dims = 1:10, verbose = T)
 Necrosisgenes <- c("FOSB","FOS","JUN","JUNB","ATF3","EGR1","HSPA1A","HSPA1B","HSPB1","IER3","IER2","DUSP1")
 
 #Computes an enrichment score for necrosis genes
-initial <- AddModuleScore(
+initial  <- AddModuleScore(
   object = initial,
   features = Necrosisgenes,
   ctrl = 100,
@@ -51,11 +51,15 @@ initial <- AddModuleScore(
 )
 
 #Filtering out of cells with high necrosis gene score
-cleaned <- subset(initial, subset = Necrosis_Scoring1 < 1)
+cleaned  <- subset(initial, subset = Necrosis_Scoring1 < 1)
 
 
 ##SCTransform, dimensional reduction and clustering of cleaned data
-cleaned <- SCTransform(cleaned, vars.to.regress = c("nCount_RNA","nFeature_RNA","plate"), do.scale = T, verbose = T)
+cleaned  <- SCTransform(cleaned, 
+                        vars.to.regress = c("nCount_RNA","nFeature_RNA","plate"), 
+                        do.scale = T, 
+                        verbose = T
+)
 
 #These are now standard steps in the Seurat workflow for visualization and clustering
 cleaned  <- RunPCA(object = cleaned , verbose = T)
@@ -80,17 +84,32 @@ trafficlightinfectioncolors <- c("#A6D854","#FFD92F","#E41A1C")
 cellcyclecolors <- c("#b3cde3","#ccebc5","#fbb4ae")
 
 
-#Make cluster plots
+#Make cluster plots 
 pdf("Figure_2A_tsne.pdf")
-DimPlot(cleaned, reduction = "tsne", pt.size = 1, cols = clustercols) + ggtitle('Cell Clusters') 
+DimPlot(cleaned, 
+        reduction = "tsne", 
+        pt.size = 1, 
+        cols = clustercols
+) 
++ ggtitle('Cell Clusters') 
 dev.off()
 
 pdf("Figure_S3B_umap.pdf")
-DimPlot(cleaned, reduction = "umap", pt.size = 1, cols = clustercols) + ggtitle('Cell Clusters') 
+DimPlot(cleaned, 
+        reduction = "umap", 
+        pt.size = 1, 
+        cols = clustercols
+) 
++ ggtitle('Cell Clusters') 
 dev.off()
 
 pdf("Figure_S3C_pca.pdf")
-DimPlot(cleaned, reduction = "pca", pt.size = 1, cols = clustercols) + ggtitle('Cell Clusters') 
+DimPlot(cleaned, 
+        reduction = "pca", 
+        pt.size = 1, 
+        cols = clustercols
+) 
++ ggtitle('Cell Clusters') 
 dev.off()
 
 
@@ -128,17 +147,46 @@ cleaned <- BuildClusterTree(
 
 
 ##Cell cycle analysis
-#Read in list of cell cycle markers from Tirosh et al. (2015), Nature - PMID: 27806376
+#Read in list of cell cycle markers from Tirosh et al. (2016), Nature - PMID: 27806376
 cc.genes <- readLines(con = "CellCycleGenes.txt")
 
-#Perform cell cycle scoring
+#Cell cycle scoring
 s.genes <- cc.genes[1:43]
 g2m.genes <- cc.genes[44:97]
-cleaned <- CellCycleScoring(cleaned, s.features = s.genes, g2m.features = g2m.genes, 
-                         set.ident = TRUE)
+cleaned <- CellCycleScoring(cleaned, 
+                            assay = 'SCT',
+                            s.features = s.genes, 
+                            g2m.features = g2m.genes
+)
 
-pdf("Figure_S3F_cell_cycle.pdf"
-DimPlot(cleaned, group.by = c("Phase"), reduction = x, cols = cellcyclecolors, pt.size = 1) + ggtitle('Cell Cycle Phases') 
+#Make tsne plot displaying cell cycle phases
+pdf("Figure_S3F_cell_cycle.pdf")
+DimPlot(cleaned, 
+        group.by = c("Phase"), 
+        reduction = "tsne", 
+        cols = cellcyclecolors, 
+        pt.size = 1
+) 
++ ggtitle('Cell Cycle Phases') 
+dev.off()
+
+
+##Find markers for every cluster compared to all remaining cells, report only the positive ones
+cleaned.markers <- FindAllMarkers(object = cleaned, only.pos = TRUE, min.pct = 0.25, 
+                                       thresh.use = 0.25)
+write.csv(cleaned.markers,"Supplemental_Data_1_Cluster_markers_Wilcox.csv")
+
+##Make violin plots for lineage marker gene expression per Seurat cluster
+pdf("Figure_2B_lineage_marker.pdf", width = 3, height = 3)
+VlnPlot(obj = cleaned, 
+        features = c("ALB","MKI67","KRT7","EPCAM"), 
+        cols = clustercols, 
+        fill.by = "ident", 
+        flip = TRUE, 
+        stack = TRUE
+       ) 
++ NoLegend()
+dev.off()
 
 
 
