@@ -32,11 +32,11 @@ metadata <- metadata[,-1]
 ##Create Seurat object
 initial <- CreateSeuratObject(counts = rawdata, 
                               meta.data = metadata
-)
+                             )
 
 initial <- subset(initial, 
                   subset = nCount_RNA > 2000 & nCount_RNA < Inf
-)
+                 )
 
 
 ##SCTransform
@@ -44,7 +44,7 @@ initial  <- SCTransform(initial,
                         vars.to.regress = c("nCount_RNA","nFeature_RNA","plate"), 
                         do.scale = T, 
                         verbose = T
-)
+                       )
 
 ##Analysis of necrosis
 #See van den Brink et al. (2017), Nature Methods - PMID: 28960196
@@ -67,7 +67,7 @@ cleaned  <- SCTransform(cleaned,
                         vars.to.regress = c("nCount_RNA","nFeature_RNA","plate"), 
                         do.scale = T, 
                         verbose = T
-)
+                       )
 
 #These are now standard steps in the Seurat workflow for visualization and clustering
 cleaned  <- RunPCA(object = cleaned , verbose = T)
@@ -96,7 +96,7 @@ DimPlot(cleaned,
         reduction = "tsne", 
         pt.size = 1, 
         cols = clustercols
-) 
+       ) 
 + ggtitle('Cell Clusters') 
 dev.off()
 
@@ -105,7 +105,7 @@ DimPlot(cleaned,
         reduction = "umap", 
         pt.size = 1, 
         cols = clustercols
-) 
+       ) 
 + ggtitle('Cell Clusters') 
 dev.off()
 
@@ -114,7 +114,7 @@ DimPlot(cleaned,
         reduction = "pca", 
         pt.size = 1, 
         cols = clustercols
-) 
+       ) 
 + ggtitle('Cell Clusters') 
 dev.off()
 
@@ -163,7 +163,7 @@ cleaned <- CellCycleScoring(cleaned,
                             assay = 'SCT',
                             s.features = s.genes, 
                             g2m.features = g2m.genes
-)
+                           )
 
 #Make tsne plot displaying cell cycle phases
 pdf("Figure_S3F_cell_cycle.pdf")
@@ -172,7 +172,7 @@ DimPlot(cleaned,
         reduction = "tsne", 
         cols = cellcyclecolors, 
         pt.size = 1
-) 
+       ) 
 + ggtitle('Cell Cycle Phases') 
 dev.off()
 
@@ -180,8 +180,14 @@ dev.off()
 hepatocytemarker = c("ALB","AFP","RBP4","FABP1","SERPINA1","ASGR2","ASGR1","APOA2","APOC3")
 
 #Make tsne plots for hepatocyte marker gene expression
-pdf("Figure_S4A.pdf")
-FeaturePlot(cleaned, features = hepatocytemarker, cols = viridis(10), reduction = "tsne", pt.size = 1, ncol = 3)
+pdf("Figure_S4A_hepatocyte_marker_expression.pdf")
+FeaturePlot(cleaned, 
+            features = hepatocytemarker, 
+            cols = viridis(10), 
+            reduction = "tsne", 
+            pt.size = 1, 
+            ncol = 3
+           )
 dev.off()
 
 #Enrichment scoring for hepatocyte marker genes
@@ -190,10 +196,15 @@ cleaned <- AddModuleScore(
   features = hepatocytemarker,
   ctrl = 100,
   name = "Hepatocyte_Scoring"
-)
+           )
 
-pdf("Figure_S4B.pdf")
-FeaturePlot(cleaned, features = "Hepatocyte_Scoring1", cols = inferno(10), reduction = "tsne", pt.size = 1)
+pdf("Figure_S4B_hepatocyte_marker_scoring.pdf")
+FeaturePlot(cleaned, 
+            features = "Hepatocyte_Scoring1", 
+            cols = inferno(10), 
+            reduction = "tsne", 
+            pt.size = 1
+           )
 dev.off()
 
 
@@ -201,8 +212,14 @@ dev.off()
 cholangiocytemarker = c("KRT19","KRT8","KRT18","EPCAM","KRT7")
 
 #Make tsne plots for cholangiocyte marker gene expression
-pdf("Figure_S5A.pdf")
-FeaturePlot(cleaned, features = cholangiocytemarker, cols = viridis(10), reduction = "tsne", pt.size = 1, ncol = 3)
+pdf("Figure_S5A_cholangiocyte_marker_expression.pdf")
+FeaturePlot(cleaned, 
+            features = cholangiocytemarker, 
+            cols = viridis(10), 
+            reduction = "tsne", 
+            pt.size = 1, 
+            ncol = 3
+           )
 dev.off()
 
 #Enrichment scoring for cholangiocyte marker genes
@@ -213,12 +230,12 @@ cleaned <- AddModuleScore(
   name = "Cholangiocyte_Scoring"
 )
 
-pdf("Figure_S5B.pdf")
+pdf("Figure_S5B_cholangiocyte_marker_scoring.pdf")
 FeaturePlot(cleaned, features = "Cholangiocyte_Scoring1", cols = inferno(10), reduction = "tsne", pt.size = 1)
 dev.off()
 
 
-##Find markers for every cluster compared to all remaining cells, report only the positive ones
+##Differentially expressed (DE) genes per cluster - only positive markers are reported per Seurat cluster
 cleaned.markers <- FindAllMarkers(object = cleaned, only.pos = TRUE, min.pct = 0.25, 
                                        thresh.use = 0.25)
 write.csv(cleaned.markers,"Supplemental_Data_1_Cluster_markers_Wilcox.csv")
