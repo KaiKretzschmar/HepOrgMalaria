@@ -7,11 +7,12 @@ library(RColorBrewer)
 library(enrichR)
 library(clustree)
 
+
 ##Set working directory
 setwd("~/HepOrgMalaria/humanreads/InitialAnalysis/")
 
 
-##Load in rawdata and metadata 
+##Load in rawdata and metadata
 rawdata <- read.csv("HepOrgMalaria_humanreads_rawdata.csv",sep=",")
 names   <- make.unique(rawdata[,1])
 rownames(rawdata) <- names
@@ -19,25 +20,31 @@ rawdata <- rawdata[,-1]
 
 rawdata[is.na(rawdata)] <- 0
 
-rawdata <- rawdata[grep("ERCC-",rownames(rawdata),invert=TRUE),]
-rawdata <- rawdata[grep("MT-",rownames(rawdata),invert=TRUE),]
+rawdata <- rawdata[grep("ERCC-",rownames(rawdata), invert=TRUE),]
+rawdata <- rawdata[grep("MT-",rownames(rawdata), invert=TRUE),]
 
-metadata <- read.csv("HepOrgMalaria_humanreads_metadata.csv",sep=",")
+
+metadata <- read.csv("HepOrgMalaria_humanreads_metadata.csv", sep=",")
 rownames(metadata) <- metadata[,1]
 metadata <- metadata[,-1]
 
 
 ##Create Seurat object
-initial <- CreateSeuratObject(counts = rawdata, meta.data = metadata)
-initial <- subset(x = initial, subset = nCount_RNA > 2000 & nCount_RNA < Inf)
+initial <- CreateSeuratObject(counts = rawdata, 
+                              meta.data = metadata
+)
+
+initial <- subset(initial, 
+                  subset = nCount_RNA > 2000 & nCount_RNA < Inf
+)
 
 
-##SCTransform, dimensional reduction and clustering
-initial  <- SCTransform(initial, vars.to.regress = c("nCount_RNA","nFeature_RNA","plate"), do.scale = T, verbose = T)
-initial  <- RunPCA(object = initial , verbose = T)
-initial  <- RunTSNE(object = initial , verbose = T)
-initial  <- RunUMAP(object = initial , dims = 1:10, verbose = T)
-initial  <- FindNeighbors(object = initial , dims = 1:10, verbose = T)
+##SCTransform
+initial  <- SCTransform(initial, 
+                        vars.to.regress = c("nCount_RNA","nFeature_RNA","plate"), 
+                        do.scale = T, 
+                        verbose = T
+)
 
 ##Analysis of necrosis
 Necrosisgenes <- c("FOSB","FOS","JUN","JUNB","ATF3","EGR1","HSPA1A","HSPA1B","HSPB1","IER3","IER2","DUSP1")
@@ -68,10 +75,8 @@ cleaned  <- RunUMAP(object = cleaned , dims = 1:10, verbose = T)
 cleaned  <- FindNeighbors(object = cleaned , dims = 1:10, verbose = T)
 cleaned  <- FindClusters(cleaned, verbose = T, resolution = 0.4, algorithm = 1)
 
-#Safe clusters
-Idents(cleaned)
+#Safe Seurat clusters
 cleaned$initialclusters <- Idents(cleaned)
-Idents(cleaned)
 
 #Define colours
 cl.cols <- 5
@@ -170,11 +175,53 @@ DimPlot(cleaned,
 + ggtitle('Cell Cycle Phases') 
 dev.off()
 
+##Define hepatocyte genes
+hepatocytemarker = c("ALB","AFP","RBP4","FABP1","SERPINA1","ASGR2","ASGR1","APOA2","APOC3")
+
+#Make tsne plots for hepatocyte marker gene expression
+pdf("Figure_S4A.pdf")
+FeaturePlot(cleaned, features = hepatocytemarker, cols = viridis(10), reduction = "tsne", pt.size = 1, ncol = 3)
+dev.off()
+
+#Enrichment scoring for hepatocyte marker genes
+cleaned <- AddModuleScore(
+  object = cleaned,
+  features = hepatocytemarker,
+  ctrl = 100,
+  name = "Hepatocyte_Scoring"
+)
+
+pdf("Figure_S4B.pdf")
+FeaturePlot(cleaned, features = "Hepatocyte_Scoring1", cols = inferno(10), reduction = "tsne", pt.size = 1)
+dev.off()
+
+
+##Define cholangiocyte genes
+cholangiocytemarker = c("KRT19","KRT8","KRT18","EPCAM","KRT7")
+
+#Make tsne plots for cholangiocyte marker gene expression
+pdf("Figure_S5A.pdf")
+FeaturePlot(cleaned, features = cholangiocytemarker, cols = viridis(10), reduction = "tsne", pt.size = 1, ncol = 3)
+dev.off()
+
+#Enrichment scoring for cholangiocyte marker genes
+cleaned <- AddModuleScore(
+  object = cleaned,
+  features = cholangiocytemarker,
+  ctrl = 100,
+  name = "Cholangiocyte_Scoring"
+)
+
+pdf("Figure_S5B.pdf")
+FeaturePlot(cleaned, features = "Cholangiocyte_Scoring1", cols = inferno(10), reduction = "tsne", pt.size = 1)
+dev.off()
+
 
 ##Find markers for every cluster compared to all remaining cells, report only the positive ones
 cleaned.markers <- FindAllMarkers(object = cleaned, only.pos = TRUE, min.pct = 0.25, 
                                        thresh.use = 0.25)
 write.csv(cleaned.markers,"Supplemental_Data_1_Cluster_markers_Wilcox.csv")
+
 
 ##Make violin plots for lineage marker gene expression per Seurat cluster
 pdf("Figure_2B_lineage_marker.pdf", width = 3, height = 3)
