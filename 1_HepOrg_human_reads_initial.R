@@ -47,6 +47,7 @@ initial  <- SCTransform(initial,
 )
 
 ##Analysis of necrosis
+#See van den Brink et al. (2017), Nature Methods - PMID: 28960196
 Necrosisgenes <- c("FOSB","FOS","JUN","JUNB","ATF3","EGR1","HSPA1A","HSPA1B","HSPB1","IER3","IER2","DUSP1")
 
 #Computes an enrichment score for necrosis genes
