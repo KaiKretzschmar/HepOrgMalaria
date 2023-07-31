@@ -54,7 +54,10 @@ pbmc  <- FindClusters(object = pbmc , resolution = 0.4, verbose = T)
 cl.cols <- 6
 clustercols <- colorRampPalette(brewer.pal(6, "Set2"))(cl.cols)
 
-
+##
+pdf("Figure_4A_.pdf")
+DimPlot(pbmc, reduction = "tsne", pt.size = 3, cols = clustercols)
+dev.off()
 
 #Safe initial cluster IDs
 Idents(pbmc)
