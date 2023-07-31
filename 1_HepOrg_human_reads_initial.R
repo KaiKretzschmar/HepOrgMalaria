@@ -545,6 +545,48 @@ CombinePlots(list(alb,afb,rbp4,epcam,krt19,krt8,mki67), ncol = 3)
 dev.off()
 
 
+##GLUL-GS expression
+pdf("Figure_S11_left_GLUL_tsne.pdf")
+FeaturePlot(cleaned, 
+            features = "GLUL", 
+            cols = viridis(10), 
+            reduction = "tsne", 
+            pt.size = 2
+           )
+dev.off()
+
+pdf("Figure_S11_right_GLUL_cluster_violin_plot.pdf")
+VlnPlot(cleaned, 
+        log = T, 
+        features = "GLUL", 
+        cols = clustercols, 
+        group.by = "initialclusters", 
+        pt.size = 0
+       ) 
++ geom_boxplot(width=0.2, fill="white") 
++ stat_compare_means(method = "wilcox.test", 
+                     label = "p.signif", 
+                     ref.group = "3"
+                    ) 
+dev.off()
+
+
+statsparasitetranscripts <- list( c("none", "low"),c("none", "high"),c("high", "low"))
+
+pdf("Figure_S11_centre_GLUL_parasite_transcripts_violin_plot.pdf")
+VlnPlot(cleaned, 
+        log = T, 
+        features = "GLUL", 
+        cols = c("#A6D854","#FFD92F","#FF4F51"), 
+        group.by = "parasitetranscripts", 
+        pt.size = 0
+       ) 
++ geom_boxplot(width=0.2, fill="white") 
++ stat_compare_means(method = "wilcox.test", 
+                     label = "p.signif", 
+                     comparisons = statsparasitetranscripts
+                    ) 
+dev.off()
 
 
 
