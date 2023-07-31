@@ -80,8 +80,13 @@ dev.off()
 
 
 ##Genes upregulated in infected HepOrg cells
-infectionmarkers <- FindMarkers(cleaned.list$day5, ident.1 = "yes", ident.2 = "no", only.pos = TRUE, min.pct = 0.25, 
-                           thresh.use = 0.25)
+infectionmarkers <- FindMarkers(cleaned.list$day5, 
+                                ident.1 = "yes", 
+                                ident.2 = "no", 
+                                only.pos = TRUE, 
+                                min.pct = 0.25, 
+                                thresh.use = 0.25
+                               )
 
 ##Enrichr analysis
 dbs <- listEnrichrDbs()
