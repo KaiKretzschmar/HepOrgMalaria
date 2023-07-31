@@ -296,20 +296,77 @@ VlnPlot(cleaned,
                     )
 dev.off()
 
+
+##Infection analysis
 pdf("Figure_2D_parasite_transcripts_tsne.pdf")
 DimPlot(cleaned, group.by = "parasitetranscripts", reduction = "tsne", cols = parasitetranscriptscolors, pt.size = 1)
 dev.off()
 
-ggplot(cleaned@meta.data, aes(x=parasitetranscripts, fill=initialclusters)) + geom_bar(position = "fill") + theme_classic() + scale_fill_manual(values =  clustercols)
+ggplot(cleaned@meta.data, aes(x=parasitetranscripts, fill=initialclusters)) 
++ geom_bar(position = "fill") 
++ theme_classic() 
++ scale_fill_manual(values =  clustercols)
 ggsave("Figure_2E_parasite_transcripts-vs-clusters.pdf")
 
-ggplot(cleaned@meta.data, aes(x=initialclusters, fill=parasitetranscripts)) + geom_bar(position = "fill") + theme_classic() + scale_fill_manual(values =  parasitetranscriptscolors)
+ggplot(cleaned@meta.data, aes(x=initialclusters, fill=parasitetranscripts)) 
++ geom_bar(position = "fill") 
++ theme_classic() 
++ scale_fill_manual(values=parasitetranscriptscolors)
 ggsave("Figure_2F_clusters-vs-parasite_transcripts.pdf")
 
-ggplot(cleaned@meta.data, aes(x=day, fill=parasitetranscripts)) + geom_bar(position = "fill") + theme_classic() + scale_fill_manual(values =  parasitetranscriptscolors) 
+ggplot(cleaned@meta.data, aes(x=day, fill=parasitetranscripts)) 
++ geom_bar(position = "fill") 
++ theme_classic() 
++ scale_fill_manual(values =  parasitetranscriptscolors) 
 ggsave("Figure_2G_days-vs-parasite_transcripts.pdf")
 
 
+##Analysis of entry factors expression
+pdf("Figure_2H_SCARB1_tsne.pdf")
+FeaturePlot(cleaned, 
+            features = "SCARB1", 
+            cols = viridis(10), 
+            reduction = "tsne", 
+            pt.size = 2
+           )
+dev.off()
+
+pdf("Figure_2I_SCARB1_cluster_violin_plot.pdf")
+VlnPlot(cleaned, 
+        log = T, 
+        features = "SCARB1", 
+        cols = clustercols, 
+        group.by = "initialclusters", 
+        pt.size = 0
+       ) 
++ geom_boxplot(width=0.2, 
+               fill="white"
+              ) 
++ stat_compare_means(method = "wilcox.test", 
+                     label = "p.signif", 
+                     ref.group = "3"
+                    ) 
+dev.off()
+
+
+statsparasitetranscripts <- list( c("none", "low"),c("none", "high"),c("high", "low"))
+
+pdf("Figure_2J_SCARB1_parasite_transcripts_violin_plot.pdf")
+VlnPlot(cleaned, 
+        log = T, 
+        features = "SCARB1", 
+        cols = c("#A6D854","#FFD92F","#FF4F51"), 
+        group.by = "parasitetranscripts", 
+        pt.size = 0
+       ) 
++ geom_boxplot(width=0.2, 
+               fill="white"
+              ) 
++ stat_compare_means(method = "wilcox.test", 
+                     label = "p.signif", 
+                     comparisons = statsparasitetranscripts
+                    ) 
+dev.off()
 
 
 
