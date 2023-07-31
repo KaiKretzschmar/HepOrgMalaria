@@ -41,3 +41,18 @@ pbmc <- subset(x = pbmc,
                subset = nCount_RNA > 50 & nCount_RNA < Inf
               )
 
+##SCTransform
+pbmc <- SCTransform(pbmc, vars.to.regress = c("nCount_RNA","nFeature_RNA","plate"), do.scale = T, verbose = T)
+
+# These are now standard steps in the Seurat workflow for visualization and clustering
+pbmc  <- RunPCA(object = pbmc , verbose = T)
+pbmc  <- RunTSNE(object = pbmc , verbose = T, check_duplicates = F)
+pbmc  <- RunUMAP(object = pbmc , dims = 1:10, verbose = T)
+pbmc  <- FindNeighbors(object = pbmc , dims = 1:10, verbose = T)
+pbmc  <- FindClusters(object = pbmc , verbose = T)
+pbmc  <- FindClusters(object = pbmc , resolution = 0.4, verbose = T)
+
+# Hexadecimal color specification 
+cl.cols <- 6
+clustercols <- colorRampPalette(brewer.pal(6, "Set2"))(cl.cols)
+
