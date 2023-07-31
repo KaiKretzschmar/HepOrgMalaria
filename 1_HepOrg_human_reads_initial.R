@@ -173,6 +173,16 @@ DimPlot(cleaned,
        ) 
 dev.off()
 
+ggplot(cleaned@meta.data, 
+       aes(x=condition, 
+           fill=initialclusters)
+      ) 
++ geom_bar(position = "fill") 
++ theme_classic() 
++ scale_fill_manual(values=clustercols)
+ggsave("Figure_S3D_right_condition_vs_clusters.pdf")
+
+
 pdf("Figure_S3E_collection_day_tsne.pdf")
 DimPlot(cleaned, 
         group.by = "day", 
@@ -204,9 +214,9 @@ ggplot(condition$sample@meta.data,
        aes(x=gating, 
            fill=infectionstatus)
       ) 
-+ geom_bar(position = "fill") 
++ geom_bar(position="fill") 
 + theme_classic() 
-+ scale_fill_manual(values =  infectionstatuscolors) 
++ scale_fill_manual(values=infectionstatuscolors) 
 ggsave("Figure_S3G_right_gating-vs-infectionstatus.pdf")
 
 
