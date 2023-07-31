@@ -55,8 +55,13 @@ cl.cols <- 6
 clustercols <- colorRampPalette(brewer.pal(6, "Set2"))(cl.cols)
 
 #Make cluster plots
-pdf("Figure_4A_.pdf")
+pdf("Figure_4A_initial_clustering_tsne.pdf")
 DimPlot(pbmc, reduction = "tsne", pt.size = 3, cols = clustercols)
+dev.off()
+
+##
+pdf("Figure_4B_stages_tsne.pdf", width = 5, height = 4.5)
+DimPlot(pbmc, group.by = c("stage"), pt.size = 3, reduction = "tsne", cols = c("#5ab4ac","#d8b365"))
 dev.off()
 
 #Safe initial cluster IDs
