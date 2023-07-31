@@ -86,7 +86,7 @@ conditioncolors <- c("#5ab4ac","#d8b365")
 daycolors <- c("#1f78b4","#33a02c")
 gatingcolors <- c("#7fbf7b","#af8dc3")
 infectionstatuscolors <- c("grey","red")
-trafficlightinfectioncolors <- c("#A6D854","#FFD92F","#E41A1C")
+parasitetranscriptscolors <- c("#A6D854","#FFD92F","#E41A1C")
 cellcyclecolors <- c("#b3cde3","#ccebc5","#fbb4ae")
 
 
@@ -152,6 +152,24 @@ cleaned <- BuildClusterTree(
 )
 
 
+##Differentially expressed (DE) genes per cluster - only positive markers are reported per Seurat cluster
+cleaned.markers <- FindAllMarkers(object = cleaned, only.pos = TRUE, min.pct = 0.25, 
+                                       thresh.use = 0.25)
+write.csv(cleaned.markers,"Supplementary_Data_1_Cluster_markers_Wilcox.csv")
+
+##Make violin plots for lineage marker gene expression per Seurat cluster
+pdf("Figure_2B_lineage_marker.pdf", width = 3, height = 3)
+VlnPlot(obj = cleaned, 
+        features = c("ALB","MKI67","KRT7","EPCAM"), 
+        cols = clustercols, 
+        fill.by = "ident", 
+        flip = TRUE, 
+        stack = TRUE
+       ) 
++ NoLegend()
+dev.off()
+
+
 ##Cell cycle analysis
 #Read in list of cell cycle markers from Tirosh et al. (2016), Nature - PMID: 27806376
 cc.genes <- readLines(con = "CellCycleGenes.txt")
@@ -198,7 +216,7 @@ cleaned <- AddModuleScore(
   name = "Hepatocyte_Scoring"
            )
 
-pdf("Figure_S4B_hepatocyte_marker_scoring.pdf")
+pdf("Figure_S4B_hepatocyte_marker_scoring_tsne.pdf")
 FeaturePlot(cleaned, 
             features = "Hepatocyte_Scoring1", 
             cols = inferno(10), 
@@ -207,6 +225,27 @@ FeaturePlot(cleaned,
            )
 dev.off()
 
+pdf("Figure_2C_hepatocyte_marker_scoring_violin_plot.pdf")
+VlnPlot(cleaned, 
+        log = T, 
+        features = "Hepatocyte_Scoring1", 
+        cols = clustercols, 
+        group.by = "initialclusters", 
+        pt.size = 0
+       ) 
++ geom_boxplot(width=0.2, 
+               fill="white"
+              ) 
++ NoLegend() 
++ labs(title = "Hepatocyte Marker", 
+       x = "Clusters", 
+       y = "Score"
+      ) 
++ stat_compare_means(method = "wilcox.test", 
+                     label = "p.format", 
+                     ref.group = "3"
+                    )
+dev.off()
 
 ##Define cholangiocyte genes
 cholangiocytemarker = c("KRT19","KRT8","KRT18","EPCAM","KRT7")
@@ -230,28 +269,31 @@ cleaned <- AddModuleScore(
   name = "Cholangiocyte_Scoring"
 )
 
-pdf("Figure_S5B_cholangiocyte_marker_scoring.pdf")
+pdf("Figure_S5B_cholangiocyte_marker_scoring_tsne.pdf")
 FeaturePlot(cleaned, features = "Cholangiocyte_Scoring1", cols = inferno(10), reduction = "tsne", pt.size = 1)
 dev.off()
 
 
-##Differentially expressed (DE) genes per cluster - only positive markers are reported per Seurat cluster
-cleaned.markers <- FindAllMarkers(object = cleaned, only.pos = TRUE, min.pct = 0.25, 
-                                       thresh.use = 0.25)
-write.csv(cleaned.markers,"Supplemental_Data_1_Cluster_markers_Wilcox.csv")
-
-
-##Make violin plots for lineage marker gene expression per Seurat cluster
-pdf("Figure_2B_lineage_marker.pdf", width = 3, height = 3)
-VlnPlot(obj = cleaned, 
-        features = c("ALB","MKI67","KRT7","EPCAM"), 
+pdf("Figure_S5C_cholangiocyte_marker_scoring_violin_plot.pdf")
+VlnPlot(cleaned, 
+        log = T, 
+        features = "Cholangiocyte_Scoring1", 
         cols = clustercols, 
-        fill.by = "ident", 
-        flip = TRUE, 
-        stack = TRUE
+        group.by = "initialclusters", 
+        pt.size = 0
        ) 
-+ NoLegend()
++ geom_boxplot(width=0.2, 
+               fill="white"
+              ) 
++ NoLegend() 
++ labs(title = "Cholangiocyte Marker", 
+       x = "Clusters", 
+       y = "Score"
+      ) 
++ stat_compare_means(method = "wilcox.test", 
+                     label = "p.format", 
+                     ref.group = "4"
+                    )
 dev.off()
-
 
 
