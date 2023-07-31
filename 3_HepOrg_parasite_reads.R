@@ -94,7 +94,7 @@ stagecols <- c("#5ab4ac","#d8b365")
 colorlist <- list(stage=stagecols)
 
 stage.markers %>%
-        group_by(stage) %>%
+        group_by(cluster) %>%
         top_n(n = 50, wt = avg_log2FC) -> top50
 
 pdf("Figure_4C_heatmap_stage_marker_genes.pdf", width = 10, height = 5)
