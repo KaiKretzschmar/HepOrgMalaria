@@ -50,7 +50,18 @@ DE.genes <- FindAllMarkers(object = cleaned.list$day5, only.pos = TRUE, min.pct 
 write.csv(DE.genes,"Supplementary_Data_2.csv")
 
 
-pdf("Figure_3C_selected_DE_genes.pdf", width = 15, height = 9)
+##TOP DE genes
+gene.list = c("MIR6087","APOE","PTMS","C3","APOB","VTN","IGF2","PRAP1","H19","APOA1","TF","ITIH1","APOC3","SERPINF2","SCARB1","MTRNR2L1","APOH","RBP4","F2","C5",
+              "PSMA5","ITGB1","CHCHD2","EIF4G2","ITGAV","EEF1B2","VDAC1","SH3BGRL3","COX4I1","LAMC1","CCT2","RPS25","ID1","PTMA","TRAM1","TPM4","ANXA2","YWHAB","CALM2","CLTC","ZNF664","TPM1","PDLIM1","MYL12B","ARPC2")
+
+pdf("Figure_3B_TOP_DE_genes_heatmap.pdf")
+colorlist <- list(infectionstatus=infectionstatuscolors)
+names(colorlist[["infectionstatus"]]) <- c("no","yes")
+DoMultiBarHeatmap(cleaned.list$day5, features = gene.list, group.by="infectionstatus", cols.use=colorlist) + scale_fill_gradientn(colors = viridis(10))
+dev.off()
+
+
+pdf("Figure_3C_selected_DE_genes.pdf")
 my_comparison1 <- list( c("no", "yes"))
 cpt1a <- VlnPlot(cleaned.list$day5, log = T, features = "CPT1A", cols = infectionstatuscolors, group.by = "infectionstatus", pt.size = 0) + geom_boxplot(width=0.2,fill="white") + stat_compare_means(method = "wilcox.test", label = "p.signif", comparisons = my_comparison1) + theme(legend.position = "none") 
 fasn <- VlnPlot(cleaned.list$day5, log = T, features = "FASN", cols = infectionstatuscolors, group.by = "infectionstatus", pt.size = 0) + geom_boxplot(width=0.2,fill="white") + stat_compare_means(method = "wilcox.test", label = "p.signif", comparisons = my_comparison1) + theme(legend.position = "none") 
@@ -65,8 +76,6 @@ lss <- VlnPlot(cleaned.list$day5, log = T, features = "LSS", cols = infectionsta
 mttp <- VlnPlot(cleaned.list$day5, log = T, features = "MTTP", cols = infectionstatuscolors, group.by = "infectionstatus", pt.size = 0) + geom_boxplot(width=0.2,fill="white") + stat_compare_means(method = "wilcox.test", label = "p.signif", comparisons = my_comparison1) + theme(legend.position = "none") 
 CombinePlots(list(cpt1a,fasn,apoa1,hmgcr,g6pc,pcsk9,apob,ppara,lss,mttp),ncol = 5)
 dev.off()
-
-
 
 
 ##Genes upregulated in infected HepOrg cells
