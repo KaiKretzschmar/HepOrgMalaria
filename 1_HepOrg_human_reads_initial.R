@@ -296,4 +296,18 @@ VlnPlot(cleaned,
                     )
 dev.off()
 
+pdf("Figure_2D_parasite_transcripts_tsne.pdf")
+DimPlot(cleaned, group.by = "parasitetranscripts", reduction = "tsne", cols = parasitetranscriptscolors, pt.size = 1)
+dev.off()
+
+ggplot(cleaned@meta.data, aes(x=parasitetranscripts, fill=initialclusters)) + geom_bar(position = "fill") + theme_classic() + scale_fill_manual(values =  clustercols)
+ggsave("Figure_2E_parasite_transcripts-vs-clusters.pdf")
+
+ggplot(cleaned@meta.data, aes(x=initialclusters, fill=parasitetranscripts)) + geom_bar(position = "fill") + theme_classic() + scale_fill_manual(values =  parasitetranscriptscolors)
+ggsave("Figure_2F_clusters-vs-parasite_transcripts.pdf")
+
+ggplot(cleaned@meta.data, aes(x=day, fill=parasitetranscripts)) + geom_bar(position = "fill") + theme_classic() + scale_fill_manual(values =  parasitetranscriptscolors) 
+ggsave("Figure_2G_days-vs-parasite_transcripts.pdf")
+
+
 
