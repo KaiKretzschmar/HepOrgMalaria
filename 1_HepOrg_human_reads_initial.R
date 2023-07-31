@@ -315,9 +315,9 @@ ggplot(cleaned@meta.data, aes(x=initialclusters, fill=parasitetranscripts))
 ggsave("Figure_2F_clusters-vs-parasite_transcripts.pdf")
 
 ggplot(cleaned@meta.data, aes(x=day, fill=parasitetranscripts)) 
-+ geom_bar(position = "fill") 
++ geom_bar(position= "fill") 
 + theme_classic() 
-+ scale_fill_manual(values =  parasitetranscriptscolors) 
++ scale_fill_manual(values=parasitetranscriptscolors) 
 ggsave("Figure_2G_days-vs-parasite_transcripts.pdf")
 
 
@@ -340,9 +340,7 @@ VlnPlot(cleaned,
         group.by = "initialclusters", 
         pt.size = 0
        ) 
-+ geom_boxplot(width=0.2, 
-               fill="white"
-              ) 
++ geom_boxplot(width=0.2, fill="white") 
 + stat_compare_means(method = "wilcox.test", 
                      label = "p.signif", 
                      ref.group = "3"
@@ -360,9 +358,7 @@ VlnPlot(cleaned,
         group.by = "parasitetranscripts", 
         pt.size = 0
        ) 
-+ geom_boxplot(width=0.2, 
-               fill="white"
-              ) 
++ geom_boxplot(width=0.2, fill="white") 
 + stat_compare_means(method = "wilcox.test", 
                      label = "p.signif", 
                      comparisons = statsparasitetranscripts
@@ -387,9 +383,7 @@ VlnPlot(cleaned,
         group.by = "initialclusters", 
         pt.size = 0
        ) 
-+ geom_boxplot(width=0.2, 
-               fill="white"
-              ) 
++ geom_boxplot(width=0.2, fill="white") 
 + stat_compare_means(method = "wilcox.test", 
                      label = "p.signif", 
                      ref.group = "4"
@@ -407,9 +401,7 @@ VlnPlot(cleaned,
         group.by = "parasitetranscripts", 
         pt.size = 0
        ) 
-+ geom_boxplot(width=0.2, 
-               fill="white"
-              ) 
++ geom_boxplot(width=0.2, fill="white") 
 + stat_compare_means(method = "wilcox.test", 
                      label = "p.signif", 
                      comparisons = statsparasitetranscripts
@@ -435,9 +427,7 @@ VlnPlot(cleaned,
         group.by = "initialclusters", 
         pt.size = 0
        ) 
-+ geom_boxplot(width=0.2, 
-               fill="white"
-              ) 
++ geom_boxplot(width=0.2, fill="white") 
 + stat_compare_means(method = "wilcox.test", 
                      label = "p.signif", 
                      ref.group = "4"
@@ -455,15 +445,82 @@ VlnPlot(cleaned,
         group.by = "parasitetranscripts", 
         pt.size = 0
        ) 
-+ geom_boxplot(width=0.2, 
-               fill="white"
-              ) 
++ geom_boxplot(width=0.2, fill="white") 
 + stat_compare_means(method = "wilcox.test", 
                      label = "p.signif", 
                      comparisons = statsparasitetranscripts
                     ) 
 dev.off()
 
+#Correlation plots for SCARB1 expression vs. hepatocyte, cholangiocyte and progenitor markers in sample plates only
+
+condition <- SplitObject(cleaned, split.by = "condition")
+pdf("Figure S6C_SCARB1_vs_marker_genes_in_sample_plates_only.pdf", width = 8, height = 8)
+alb <- FeatureScatter(condition$sample, 
+                      feature1 = "ALB", 
+                      feature2 = "SCARB1", 
+                      group.by = "parasitetranscripts", 
+                      cols = c("#A6D854","#FFD92F","#FF4F51"), 
+                      pt.size = 2, 
+                      slot = "counts"
+                     ) 
++ geom_smooth(method="lm", color = "#000000")
+afb <- FeatureScatter(condition$sample, 
+                      feature1 = "AFP", 
+                      feature2 = "SCARB1", 
+                      group.by = "parasitetranscripts", 
+                      cols = c("#A6D854","#FFD92F","#FF4F51"), 
+                      pt.size = 2, 
+                      slot = "counts"
+                     )  
++ geom_smooth(method="lm", color = "#000000")
+rbp4 <- FeatureScatter(condition$sample, 
+                       feature1 = "RBP4", 
+                       feature2 = "SCARB1", 
+                       group.by = "parasitetranscripts", 
+                       cols = c("#A6D854","#FFD92F","#FF4F51"), 
+                       pt.size = 2, 
+                       slot = "counts"
+                      ) 
++ geom_smooth(method="lm", color = "#000000")
+epcam <- FeatureScatter(condition$sample, 
+                        feature1 = "EPCAM", 
+                        feature2 = "SCARB1", 
+                        group.by = "parasitetranscripts", 
+                        cols = c("#A6D854","#FFD92F","#FF4F51"), 
+                        pt.size = 2, 
+                        slot = "counts"
+                       )  
++ geom_smooth(method="lm", color = "#000000")
+krt19 <- FeatureScatter(condition$sample, 
+                        feature1 = "KRT19", 
+                        feature2 = "SCARB1", 
+                        group.by = "parasitetranscripts", 
+                        cols = c("#A6D854","#FFD92F","#FF4F51"), 
+                        pt.size = 2, 
+                        slot = "counts"
+                       )  
++ geom_smooth(method="lm", color = "#000000")
+krt8 <- FeatureScatter(condition$sample, 
+                       feature1 = "KRT8", 
+                       feature2 = "SCARB1", 
+                       group.by = "parasitetranscripts", 
+                       cols = c("#A6D854","#FFD92F","#FF4F51"), 
+                       pt.size = 2, 
+                       slot = "counts"
+                      ) 
++ geom_smooth(method="lm", color = "#000000")
+mki67 <- FeatureScatter(condition$sample, 
+                        feature1 = "MKI67", 
+                        feature2 = "SCARB1", 
+                        group.by = "parasitetranscripts", 
+                        cols = c("#A6D854","#FFD92F","#FF4F51"), 
+                        pt.size = 2, 
+                        slot = "counts"
+                       )  
++ geom_smooth(method="lm", color = "#000000")
+CombinePlots(list(alb,afb,rbp4,epcam,krt19,krt8,mki67), ncol = 3)
+dev.off()
 
 
 
