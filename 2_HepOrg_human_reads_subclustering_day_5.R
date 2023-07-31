@@ -60,7 +60,7 @@ dev.off()
 infectionmarkers <- FindMarkers(cleaned.list$day5, ident.1 = "yes", ident.2 = "no", only.pos = TRUE, min.pct = 0.25, 
                            thresh.use = 0.25)
 
-##EnrichR analysis
+##Enrichr analysis
 dbs <- listEnrichrDbs()
 dbs <- "WikiPathway_2021_Human"
 
