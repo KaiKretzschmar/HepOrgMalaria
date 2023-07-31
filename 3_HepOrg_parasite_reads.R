@@ -89,4 +89,9 @@ pbmc.stagemarkers <- FindAllMarkers(object = pbmc,
                                    )
 write.csv(pbmc.stagemarkers ,"Supplementary_Data_4.csv")
 
+#Plot heatmap for stage marker genes
+stagecols <- c("#5ab4ac","#d8b365")
+colorlist <- list(stage=stagecols)
+
+
 
