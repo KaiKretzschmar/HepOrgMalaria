@@ -93,13 +93,17 @@ write.csv(stage.markers,"Supplementary_Data_4.csv")
 stagecols <- c("#5ab4ac","#d8b365")
 colorlist <- list(stage=stagecols)
 
-
 stage.markers %>%
         group_by(stage) %>%
         top_n(n = 50, wt = avg_log2FC) -> top5
 
 pdf("Figure_4C_heatmap_stage_marker_genes.pdf", width = 10, height = 5)
-DoMultiBarHeatmap(pbmc, features = top50$gene, group.by="stage", cols.use=colorlist, label=FALSE) + scale_fill_gradientn(colors = viridis(10))
+DoMultiBarHeatmap(pbmc, 
+                  features = top50$gene, 
+                  group.by="stage", 
+                  cols.use=colorlist
+                 ) 
++ scale_fill_gradientn(colors = viridis(10))
 
 
 
