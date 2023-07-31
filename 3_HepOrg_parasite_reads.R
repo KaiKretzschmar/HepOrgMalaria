@@ -54,3 +54,19 @@ pbmc  <- FindClusters(object = pbmc , resolution = 0.4, verbose = T)
 cl.cols <- 6
 clustercols <- colorRampPalette(brewer.pal(6, "Set2"))(cl.cols)
 
+
+
+#Safe initial cluster IDs
+Idents(pbmc)
+pbmc$initialclusters <- Idents(pbmc)
+Idents(pbmc)
+
+Idents(pbmc) <- pbmc@meta.data$stage
+Idents(pbmc)
+
+#Only the positive ones
+pbmc.stagemarkers <- FindAllMarkers(object = pbmc, only.pos = TRUE, min.pct = 0.25, 
+                               thresh.use = 0.25)
+write.csv(pbmc.stagemarkers ,"Supplementary_Data_4.csv")
+
+
