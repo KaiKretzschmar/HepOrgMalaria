@@ -28,11 +28,15 @@ pdf("Figure_3A_infectionstatus_tsne.pdf",)
 DimPlot(cleaned.list$day5, group.by = c("infectionstatus"), reduction = "tsne", cols = c("grey","black"), pt.size = 1)
 dev.off()
 
+##Differentially expressed (DE) genes comparing infected and non-infected HepOrg cells at day 5
+DE.genes <- FindAllMarkers(object = cleaned.list$day5, only.pos = TRUE, min.pct = 0.25, 
+                                  thresh.use = 0.25)
+write.csv(DE.genes,"Supplementary_Data_2.csv")
+
+
 ##Genes upregulated in infected HepOrg cells
 infectionmarkers <- FindMarkers(cleaned.list$day5, ident.1 = "yes", ident.2 = "no", only.pos = TRUE, min.pct = 0.25, 
                            thresh.use = 0.25)
-
-write.csv(infectionmarkers,"infection.marker.genes.csv")
 
 ##EnrichR analysis
 dbs <- listEnrichrDbs()
@@ -41,6 +45,6 @@ dbs <- "WikiPathway_2021_Human"
 infectionmarker.genes <- rownames(infectionmarkers)
 enriched.infected <- enrichr(infectionmarker.genes, dbs)
 enriched.infected[["WikiPathway_2021_Human"]]
-write.csv(enriched.infected[["WikiPathway_2021_Human"]],"infected_WikiPathway_Human.csv")
+write.csv(enriched.infected[["WikiPathway_2021_Human"]],"Supplementary_Data_3.csv")
 
 
