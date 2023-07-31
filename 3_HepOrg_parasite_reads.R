@@ -94,4 +94,8 @@ stagecols <- c("#5ab4ac","#d8b365")
 colorlist <- list(stage=stagecols)
 
 
+pdf("StageMarker/StageMarker.pdf", width = 10, height = 5)
+DoMultiBarHeatmap(pbmc, features = stagegenes[1:50], group.by="stage", cols.use=colorlist, label=FALSE) + scale_fill_gradientn(colors = viridis(10))
+
+
 
