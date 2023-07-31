@@ -7,6 +7,8 @@ library(RColorBrewer)
 library(enrichR)
 library(clustree)
 library(DoMultiBarHeatmap)
+library(rlang)
+library(magrittr)
 
 
 ##Set working directory
