@@ -51,13 +51,14 @@ write.csv(DE.genes,"Supplementary_Data_2.csv")
 
 
 ##TOP DE genes
-gene.list = c("MIR6087","APOE","PTMS","C3","APOB","VTN","IGF2","PRAP1","H19","APOA1","TF","ITIH1","APOC3","SERPINF2","SCARB1","MTRNR2L1","APOH","RBP4","F2","C5",
-              "PSMA5","ITGB1","CHCHD2","EIF4G2","ITGAV","EEF1B2","VDAC1","SH3BGRL3","COX4I1","LAMC1","CCT2","RPS25","ID1","PTMA","TRAM1","TPM4","ANXA2","YWHAB","CALM2","CLTC","ZNF664","TPM1","PDLIM1","MYL12B","ARPC2")
+DE.genes %>%
+        group_by(cluster) %>%
+        top_n(n = 50, wt = avg_log2FC) -> top50
 
 pdf("Figure_3B_TOP_DE_genes_heatmap.pdf")
 colorlist <- list(infectionstatus=infectionstatuscolors)
 names(colorlist[["infectionstatus"]]) <- c("no","yes")
-DoMultiBarHeatmap(cleaned.list$day5, features = gene.list, group.by="infectionstatus", cols.use=colorlist) + scale_fill_gradientn(colors = viridis(10))
+DoMultiBarHeatmap(cleaned.list$day5, features = top50$gene, group.by="infectionstatus", cols.use=colorlist) + scale_fill_gradientn(colors = viridis(10))
 dev.off()
 
 
