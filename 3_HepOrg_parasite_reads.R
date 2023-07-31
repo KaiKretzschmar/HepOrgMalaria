@@ -67,7 +67,7 @@ Idents(pbmc)
 Idents(pbmc) <- pbmc@meta.data$stage
 Idents(pbmc)
 
-##
+##Differentially expressed (DE) genes comparing liver stage and blood stage
 pbmc.stagemarkers <- FindAllMarkers(object = pbmc, only.pos = TRUE, min.pct = 0.25, 
                                thresh.use = 0.25)
 write.csv(pbmc.stagemarkers ,"Supplementary_Data_4.csv")
