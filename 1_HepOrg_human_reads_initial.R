@@ -322,6 +322,7 @@ ggsave("Figure_2G_days-vs-parasite_transcripts.pdf")
 
 
 ##Analysis of entry factors expression
+#SCARB1
 pdf("Figure_2H_SCARB1_tsne.pdf")
 FeaturePlot(cleaned, 
             features = "SCARB1", 
@@ -367,6 +368,107 @@ VlnPlot(cleaned,
                      comparisons = statsparasitetranscripts
                     ) 
 dev.off()
+
+#CD81
+pdf("Figure_S6A_left_CD81_tsne.pdf")
+FeaturePlot(cleaned, 
+            features = "CD81", 
+            cols = viridis(10), 
+            reduction = "tsne", 
+            pt.size = 2
+           )
+dev.off()
+
+pdf("Figure_S6A_right_CD81_cluster_violin_plot.pdf")
+VlnPlot(cleaned, 
+        log = T, 
+        features = "CD81", 
+        cols = clustercols, 
+        group.by = "initialclusters", 
+        pt.size = 0
+       ) 
++ geom_boxplot(width=0.2, 
+               fill="white"
+              ) 
++ stat_compare_means(method = "wilcox.test", 
+                     label = "p.signif", 
+                     ref.group = "4"
+                    ) 
+dev.off()
+
+
+statsparasitetranscripts <- list( c("none", "low"),c("none", "high"),c("high", "low"))
+
+pdf("Figure_S6A_centre_CD81_parasite_transcripts_violin_plot.pdf")
+VlnPlot(cleaned, 
+        log = T, 
+        features = "CD81", 
+        cols = c("#A6D854","#FFD92F","#FF4F51"), 
+        group.by = "parasitetranscripts", 
+        pt.size = 0
+       ) 
++ geom_boxplot(width=0.2, 
+               fill="white"
+              ) 
++ stat_compare_means(method = "wilcox.test", 
+                     label = "p.signif", 
+                     comparisons = statsparasitetranscripts
+                    ) 
+dev.off()
+
+
+#EPHA2
+pdf("Figure_S6B_left_EPHA2_tsne.pdf")
+FeaturePlot(cleaned, 
+            features = "EPHA2", 
+            cols = viridis(10), 
+            reduction = "tsne", 
+            pt.size = 2
+           )
+dev.off()
+
+pdf("Figure_S6B_right_CD81_cluster_violin_plot.pdf")
+VlnPlot(cleaned, 
+        log = T, 
+        features = "EPHA2", 
+        cols = clustercols, 
+        group.by = "initialclusters", 
+        pt.size = 0
+       ) 
++ geom_boxplot(width=0.2, 
+               fill="white"
+              ) 
++ stat_compare_means(method = "wilcox.test", 
+                     label = "p.signif", 
+                     ref.group = "4"
+                    ) 
+dev.off()
+
+
+statsparasitetranscripts <- list( c("none", "low"),c("none", "high"),c("high", "low"))
+
+pdf("Figure_S6B_centre_EPHA2_parasite_transcripts_violin_plot.pdf")
+VlnPlot(cleaned, 
+        log = T, 
+        features = "EPHA2", 
+        cols = c("#A6D854","#FFD92F","#FF4F51"), 
+        group.by = "parasitetranscripts", 
+        pt.size = 0
+       ) 
++ geom_boxplot(width=0.2, 
+               fill="white"
+              ) 
++ stat_compare_means(method = "wilcox.test", 
+                     label = "p.signif", 
+                     comparisons = statsparasitetranscripts
+                    ) 
+dev.off()
+
+
+
+
+
+
 
 
 
