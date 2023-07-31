@@ -82,20 +82,24 @@ Idents(pbmc) <- pbmc@meta.data$stage
 Idents(pbmc)
 
 ##Differentially expressed (DE) genes comparing liver stage and blood stage
-pbmc.stagemarkers <- FindAllMarkers(object = pbmc, 
+stage.markers <- FindAllMarkers(object = pbmc, 
                                     only.pos = TRUE, 
                                     min.pct = 0.25, 
                                thresh.use = 0.25
                                    )
-write.csv(pbmc.stagemarkers ,"Supplementary_Data_4.csv")
+write.csv(stage.markers,"Supplementary_Data_4.csv")
 
 #Plot heatmap for stage marker genes
 stagecols <- c("#5ab4ac","#d8b365")
 colorlist <- list(stage=stagecols)
 
 
-pdf("StageMarker/StageMarker.pdf", width = 10, height = 5)
-DoMultiBarHeatmap(pbmc, features = stagegenes[1:50], group.by="stage", cols.use=colorlist, label=FALSE) + scale_fill_gradientn(colors = viridis(10))
+stage.markers %>%
+        group_by(stage) %>%
+        top_n(n = 50, wt = avg_log2FC) -> top5
+
+pdf("Figure_4C_heatmap_stage_marker_genes.pdf", width = 10, height = 5)
+DoMultiBarHeatmap(pbmc, features = top50$gene, group.by="stage", cols.use=colorlist, label=FALSE) + scale_fill_gradientn(colors = viridis(10))
 
 
 
