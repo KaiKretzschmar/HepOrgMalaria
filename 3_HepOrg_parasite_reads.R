@@ -56,12 +56,21 @@ clustercols <- colorRampPalette(brewer.pal(6, "Set2"))(cl.cols)
 
 #Make cluster plots
 pdf("Figure_4A_initial_clustering_tsne.pdf")
-DimPlot(pbmc, reduction = "tsne", pt.size = 3, cols = clustercols)
+DimPlot(pbmc, 
+        reduction = "tsne", 
+        pt.size = 3, 
+        cols = clustercols
+       )
 dev.off()
 
-##
+##Assessing different experimenal categories
 pdf("Figure_4B_stages_tsne.pdf", width = 5, height = 4.5)
-DimPlot(pbmc, group.by = c("stage"), pt.size = 3, reduction = "tsne", cols = c("#5ab4ac","#d8b365"))
+DimPlot(pbmc, 
+        group.by = c("stage"), 
+        pt.size = 3, 
+        reduction = "tsne", 
+        cols = c("#5ab4ac","#d8b365")
+       )
 dev.off()
 
 #Safe initial cluster IDs
@@ -73,8 +82,11 @@ Idents(pbmc) <- pbmc@meta.data$stage
 Idents(pbmc)
 
 ##Differentially expressed (DE) genes comparing liver stage and blood stage
-pbmc.stagemarkers <- FindAllMarkers(object = pbmc, only.pos = TRUE, min.pct = 0.25, 
-                               thresh.use = 0.25)
+pbmc.stagemarkers <- FindAllMarkers(object = pbmc, 
+                                    only.pos = TRUE, 
+                                    min.pct = 0.25, 
+                               thresh.use = 0.25
+                                   )
 write.csv(pbmc.stagemarkers ,"Supplementary_Data_4.csv")
 
 
