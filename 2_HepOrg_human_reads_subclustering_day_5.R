@@ -24,6 +24,9 @@ Idents(cleaned.list$day5)
 cleaned.list$day5$initialclusters <- Idents(cleaned.list$day5)
 Idents(cleaned.list$day5)
 
+##Define colours
+infectionstatuscolors <- c("grey","black")
+
 pdf("Figure_3A_infectionstatus_tsne.pdf",)
 DimPlot(cleaned.list$day5, group.by = c("infectionstatus"), reduction = "tsne", cols = c("grey","black"), pt.size = 1)
 dev.off()
