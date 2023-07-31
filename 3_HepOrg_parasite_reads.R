@@ -33,6 +33,11 @@ metadata <- metadata[,-1]
 
 
 #Creat Seurat object
-pbmc <- CreateSeuratObject(counts = rawdata, meta.data = metadata)
-pbmc <- subset(x = pbmc, subset = nCount_RNA > 50 & nCount_RNA < Inf)
+pbmc <- CreateSeuratObject(counts = rawdata, 
+                           meta.data = metadata
+                          )
+
+pbmc <- subset(x = pbmc, 
+               subset = nCount_RNA > 50 & nCount_RNA < Inf
+              )
 
