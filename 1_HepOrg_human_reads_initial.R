@@ -365,10 +365,17 @@ VlnPlot(cleaned,
                     ) 
 dev.off()
 
-pdf("Figure_S6_D_SCARB1_split_by_condition.pdf")
+pdf("Figure_S6D_SCARB1_split_by_condition_tsne.pdf")
+FeaturePlot(cleaned, 
+            features = "SCARB1", 
+            group.by = "condition", 
+            cols = viridis(10), 
+            reduction = "tsne", 
+            pt.size = 2
+           ) 
+dev.off()
 
-
-pdf("Figure_S6_D_SCARB1_vs_condition_violin_plot.pdf")
+pdf("Figure_S6D_SCARB1_vs_condition_violin_plot.pdf")
 VlnPlot(cleaned, 
         log = T, 
         features = "SCARB1", 
