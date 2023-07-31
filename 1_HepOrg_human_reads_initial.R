@@ -6,6 +6,7 @@ library(DESeq2)
 library(RColorBrewer)
 library(enrichR)
 library(clustree)
+library(DoMultiBarHeatmap)
 
 
 ##Set working directory
