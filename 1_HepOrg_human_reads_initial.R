@@ -85,7 +85,7 @@ clustercols <- colorRampPalette(brewer.pal(5, "Set1"))(cl.cols)
 conditioncolors <- c("#5ab4ac","#d8b365")
 daycolors <- c("#1f78b4","#33a02c")
 gatingcolors <- c("#7fbf7b","#af8dc3")
-infectionstatuscolors <- c("grey","red")
+infectionstatuscolors <- c("grey","black")
 parasitetranscriptscolors <- c("#A6D854","#FFD92F","#E41A1C")
 cellcyclecolors <- c("#b3cde3","#ccebc5","#fbb4ae")
 
@@ -150,6 +150,64 @@ cleaned <- BuildClusterTree(
   reorder = FALSE,
   reorder.numeric = FALSE
 )
+dev.off()
+
+##Assessing different experimenal categories
+pdf("Figure_S3D_left_experimental_conditions_tsne.pdf")
+DimPlot(cleaned, 
+        group.by = "condition", 
+        reduction = "tsne", 
+        cols = conditioncolors, 
+        pt.size = 2
+       ) 
+dev.off()
+
+pdf("Figure_S3D_centre_clusters_split_by_experimental_conditions_tsne.pdf")
+DimPlot(cleaned, 
+        group.by = "initialclusters", 
+        split.by = "condition", 
+        reduction = "tsne", 
+        ncol = 2, 
+        cols = clustercols, 
+        pt.size = 2
+       ) 
+dev.off()
+
+pdf("Figure_S3E_collection_day_tsne.pdf")
+DimPlot(cleaned, 
+        group.by = "day", 
+        reduction = "tsne", 
+        cols = daycolors, 
+        pt.size = 2
+       ) 
+dev.off()
+
+pdf("Figure_S3G_left_gating_tsne.pdf")
+DimPlot(cleaned, 
+        group.by = "gating", 
+        reduction = "tsne", 
+        cols = gatingcolors
+        pt.size = 2
+       )
+dev.off()
+
+pdf("Figure_S3G_centre_infectionstatus_tsne.pdf")
+DimPlot(cleaned, 
+        group.by = "infectionstatus", 
+        reduction = "tsne", 
+        cols = infectionstatuscolors, 
+        pt.size = 2
+       ) 
+dev.off()
+
+ggplot(condition$sample@meta.data, 
+       aes(x=gating, 
+           fill=infectionstatus)
+      ) 
++ geom_bar(position = "fill") 
++ theme_classic() 
++ scale_fill_manual(values =  infectionstatuscolors) 
+ggsave("Figure_S3G_right_gating-vs-infectionstatus.pdf")
 
 
 ##Differentially expressed (DE) genes per cluster - only positive markers are reported per Seurat cluster
