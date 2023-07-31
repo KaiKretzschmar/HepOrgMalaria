@@ -95,7 +95,7 @@ colorlist <- list(stage=stagecols)
 
 stage.markers %>%
         group_by(stage) %>%
-        top_n(n = 50, wt = avg_log2FC) -> top5
+        top_n(n = 50, wt = avg_log2FC) -> top50
 
 pdf("Figure_4C_heatmap_stage_marker_genes.pdf", width = 10, height = 5)
 DoMultiBarHeatmap(pbmc, 
@@ -107,7 +107,7 @@ DoMultiBarHeatmap(pbmc,
 
 #Plot selected DE genes up in liver stage
 pdf("Figure_4D_liver_stage_genes.pdf")
-my_comparisonp <- list( c("liver", "blood"))
+my_comparisonp <- list( c("liver","blood"))
 csp <- VlnPlot(pbmc, log = T, features = "XM001351086.1", cols = c("#5ab4ac","#d8b365"), group.by = "stage", pt.size = 0) + geom_boxplot(width=0.2,fill="white") + stat_compare_means(method = "wilcox.test", label = "p.signif", comparisons = my_comparisonp) + theme(legend.position = "none") + ggtitle('CSP (PF3D7_0304600)') 
 lisp <- VlnPlot(pbmc, log = T, features = "XM001348316.1", cols = c("#5ab4ac","#d8b365"), group.by = "stage", pt.size = 0) + geom_boxplot(width=0.2,fill="white") + stat_compare_means(method = "wilcox.test", label = "p.signif", comparisons = my_comparisonp) + theme(legend.position = "none") + ggtitle('LISP1 (PF3D7_1418100)') 
 slarp <- VlnPlot(pbmc, log = T, features = "XM001348111.1", cols = c("#5ab4ac","#d8b365"), group.by = "stage", pt.size = 0) + geom_boxplot(width=0.2,fill="white") + stat_compare_means(method = "wilcox.test", label = "p.signif", comparisons = my_comparisonp) + theme(legend.position = "none") + ggtitle('SLARP (PF3D7_1147000)') 
