@@ -17,3 +17,30 @@ cleaned.list$day5  <- RunPCA(object = cleaned.list$day5 , verbose = T)
 cleaned.list$day5  <- RunTSNE(object = cleaned.list$day5 , verbose = T)
 cleaned.list$day5  <- RunUMAP(object = cleaned.list$day5 , dims = 1:10, verbose = T)
 cleaned.list$day5  <- FindNeighbors(object = cleaned.list$day5 , dims = 1:10, verbose = T)
+cleaned.list$day5 <- FindClusters(cleaned.list$day5, verbose = T, resolution = 0.4, algorithm = 1)
+
+#Safe clusters
+Idents(cleaned.list$day5)
+cleaned.list$day5$initialclusters <- Idents(cleaned.list$day5)
+Idents(cleaned.list$day5)
+
+pdf("Figure_3A_infectionstatus_tsne.pdf",)
+DimPlot(cleaned.list$day5, group.by = c("infectionstatus"), reduction = "tsne", cols = c("grey","black"), pt.size = 1)
+dev.off()
+
+##Genes upregulated in infected HepOrg cells
+infectionmarkers <- FindMarkers(cleaned.list$day5, ident.1 = "yes", ident.2 = "no", only.pos = TRUE, min.pct = 0.25, 
+                           thresh.use = 0.25)
+
+write.csv(infectionmarkers,"infection.marker.genes.csv")
+
+##EnrichR analysis
+dbs <- listEnrichrDbs()
+dbs <- "WikiPathway_2021_Human"
+
+infectionmarker.genes <- rownames(infectionmarkers)
+enriched.infected <- enrichr(infectionmarker.genes, dbs)
+enriched.infected[["WikiPathway_2021_Human"]]
+write.csv(enriched.infected[["WikiPathway_2021_Human"]],"infected_WikiPathway_Human.csv")
+
+
