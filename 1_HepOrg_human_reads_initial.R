@@ -242,7 +242,7 @@ VlnPlot(cleaned,
        y = "Score"
       ) 
 + stat_compare_means(method = "wilcox.test", 
-                     label = "p.format", 
+                     label = "p.signif", 
                      ref.group = "3"
                     )
 dev.off()
@@ -291,7 +291,7 @@ VlnPlot(cleaned,
        y = "Score"
       ) 
 + stat_compare_means(method = "wilcox.test", 
-                     label = "p.format", 
+                     label = "p.signif", 
                      ref.group = "4"
                     )
 dev.off()
@@ -363,6 +363,21 @@ VlnPlot(cleaned,
                      label = "p.signif", 
                      comparisons = statsparasitetranscripts
                     ) 
+dev.off()
+
+pdf("Figure_S6_D_SCARB1_split_by_condition.pdf")
+
+
+pdf("Figure_S6_D_SCARB1_vs_condition_violin_plot.pdf")
+VlnPlot(cleaned, 
+        log = T, 
+        features = "SCARB1", 
+        cols = c("#5ab4ac","#d8b365"), 
+        group.by = "condition", 
+        pt.size = 0
+       ) 
++ geom_boxplot(width=0.2,fill="white") 
++ stat_compare_means(method = "wilcox.test", label = "p.signif", ref.group = "ctrl")
 dev.off()
 
 #CD81
