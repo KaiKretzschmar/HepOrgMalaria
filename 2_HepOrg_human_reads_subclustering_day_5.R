@@ -34,6 +34,25 @@ DE.genes <- FindAllMarkers(object = cleaned.list$day5, only.pos = TRUE, min.pct 
 write.csv(DE.genes,"Supplementary_Data_2.csv")
 
 
+pdf("Figure_3C_selected_DE_genes.pdf", width = 15, height = 9)
+my_comparison1 <- list( c("no", "yes"))
+cpt1a <- VlnPlot(cleaned.list$day5, log = T, features = "CPT1A", cols = infectionstatuscolors, group.by = "infectionstatus", pt.size = 0) + geom_boxplot(width=0.2,fill="white") + stat_compare_means(method = "wilcox.test", label = "p.signif", comparisons = my_comparison1) + theme(legend.position = "none") 
+fasn <- VlnPlot(cleaned.list$day5, log = T, features = "FASN", cols = infectionstatuscolors, group.by = "infectionstatus", pt.size = 0) + geom_boxplot(width=0.2,fill="white") + stat_compare_means(method = "wilcox.test", label = "p.signif", comparisons = my_comparison1) + theme(legend.position = "none") 
+apoa1 <- VlnPlot(cleaned.list$day5, log = T, features = "APOA1", cols = infectionstatuscolors, group.by = "infectionstatus", pt.size = 0) + geom_boxplot(width=0.2,fill="white") + stat_compare_means(method = "wilcox.test", label = "p.signif", comparisons = my_comparison1) + theme(legend.position = "none") 
+hmgcr <- VlnPlot(cleaned.list$day5, log = T, features = "HMGCR", cols = infectionstatuscolors, group.by = "infectionstatus", pt.size = 0) + geom_boxplot(width=0.2,fill="white") + stat_compare_means(method = "wilcox.test", label = "p.signif", comparisons = my_comparison1) + theme(legend.position = "none") 
+g6pc <- VlnPlot(cleaned.list$day5, log = T, features = "G6PC", cols = infectionstatuscolors, group.by = "infectionstatus", pt.size = 0) + geom_boxplot(width=0.2,fill="white") + stat_compare_means(method = "wilcox.test", label = "p.signif", comparisons = my_comparison1) + theme(legend.position = "none") 
+
+pcsk9 <- VlnPlot(cleaned.list$day5, log = T, features = "PCSK9", cols = infectionstatuscolors, group.by = "infectionstatus", pt.size = 0) + geom_boxplot(width=0.2,fill="white") + stat_compare_means(method = "wilcox.test", label = "p.signif", comparisons = my_comparison1) + theme(legend.position = "none") 
+apob <- VlnPlot(cleaned.list$day5, log = T, features = "APOB", cols = infectionstatuscolors, group.by = "infectionstatus", pt.size = 0) + geom_boxplot(width=0.2,fill="white") + stat_compare_means(method = "wilcox.test", label = "p.signif", comparisons = my_comparison1) + theme(legend.position = "none") 
+ppara <- VlnPlot(cleaned.list$day5, log = T, features = "PPARA", cols = infectionstatuscolors, group.by = "infectionstatus", pt.size = 0) + geom_boxplot(width=0.2,fill="white") + stat_compare_means(method = "wilcox.test", label = "p.signif", comparisons = my_comparison1) + theme(legend.position = "none") 
+lss <- VlnPlot(cleaned.list$day5, log = T, features = "LSS", cols = infectionstatuscolors, group.by = "infectionstatus", pt.size = 0) + geom_boxplot(width=0.2,fill="white") + stat_compare_means(method = "wilcox.test", label = "p.signif", comparisons = my_comparison1) + theme(legend.position = "none") 
+mttp <- VlnPlot(cleaned.list$day5, log = T, features = "MTTP", cols = infectionstatuscolors, group.by = "infectionstatus", pt.size = 0) + geom_boxplot(width=0.2,fill="white") + stat_compare_means(method = "wilcox.test", label = "p.signif", comparisons = my_comparison1) + theme(legend.position = "none") 
+CombinePlots(list(cpt1a,fasn,apoa1,hmgcr,g6pc,pcsk9,apob,ppara,lss,mttp),ncol = 5)
+dev.off()
+
+
+
+
 ##Genes upregulated in infected HepOrg cells
 infectionmarkers <- FindMarkers(cleaned.list$day5, ident.1 = "yes", ident.2 = "no", only.pos = TRUE, min.pct = 0.25, 
                            thresh.use = 0.25)
