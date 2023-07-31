@@ -643,7 +643,6 @@ dev.off()
 
 
 statsparasitetranscripts <- list( c("none", "low"),c("none", "high"),c("high", "low"))
-
 pdf("Figure_S11_centre_GLUL_parasite_transcripts_violin_plot.pdf")
 VlnPlot(cleaned, 
         log = T, 
